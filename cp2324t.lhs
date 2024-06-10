@@ -614,23 +614,45 @@ step l = map update l
 \subsection*{Problema 2}
 
 Genes de |mergek|:
+
 \begin{code}
 
-g :: [[a]] -> Either () ([a], [[a]]) -- coloca em pares (para poder usar merge)
+f (Left ()) = []                          
+f (Right (xs, ys)) = merge (xs, ys)
+
+\end{code}
+
+\begin{code}
+
 g [] = i1 ()
 g [x] = i2 (x, [])
 g (x:xs) = i2 (x, xs)
 
 \end{code}
 
-\begin{code}
+Diagrama:
 
-f :: (Ord a) => Either () ([a], [a]) -> [a]
-f (Left ()) = []                          
-f (Right (xs, ys)) = merge (xs, ys)
-
-\end{code}
-
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    (|Nat0|^*)^*
+           \ar[r]^-{|g|}
+           \ar[d]_-{|anaList g|}
+&
+    |1 + Nat0|^* + (|Nat0|^*)^*
+           \ar[d]^-{|id + id x g|}
+\\
+    (|Nat0|^*)^*
+           \ar[d]_-{|cataList f|}
+&
+    |1 + Nat0|^* + (|Nat0|^*)^*
+           \ar[d]^-{|id + id x f|}
+\\
+    |Nat0|^*
+&
+    |1 + Nat0|^* + |Nat0|^*
+           \ar[l]^-{|f|}
+}
+\end{eqnarray*}
 
 \noindent Extensão de |mSort|:
 \begin{code}
@@ -661,26 +683,81 @@ lsplitk'' k xs = i2 (lsplitk k xs)
 
 \subsection*{Problema 3}
 
+Sendo
+
+\begin{math}
+	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
+\end{math}
+
+É imediato que $catalan(0) = 1$.
+
+Já para $catalan(n+1)$ é necessário calcular $catalan(n+1) =$ $k$ $catalan(n)$ 
+
+
+\begin{math}
+	x = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} =
+\end{math}
+
+\begin{math}
+  = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} = \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
+\end{math}
+
+Temos então
+
+\begin{math}
+catalan(n+1) = \frac{4n+2} {(n+2)} catalan(n)
+\end{math}
+
+Sendo $cataux(n) = \frac{4n+2} {(n+2)}$ podemos dividir cataux em duas funções:
+
+$num = 4n +2$
+$denom = n+2$
+
+Onde $num(0) = denom(0) = 2$, $num(n+1) = 4(n+1)+2 = 4n +4 +2 = 4 + 4n +2 = num(n) + 4$ e $denom(n+1) = n + 1 + 2 =n + 2 + 1 = denom(n) + 1$
+
+Com isto temos que:
+
+\begin{code}
+catalan 0 = 1
+catalan (n+1) = num(n) * catalan(n) `div` denom(n)
+\end{code}
+
+\begin{code}
+num 0 = 2
+num(n+1) = num(n) + 4
+\end{code}
+
+\begin{code}
+denom 0 = 2
+denom(n+1) = denom(n) + 1
+\end{code}
+
+Podemos então concluir que:
+
 \begin{code}
 cat = prj . (for loop inic)
 \end{code}
 onde:
 \begin{code}
-loop = undefined
-inic = undefined 
-prj = p1
+loop (catalan, num, denom) = ((num * catalan) `div` denom, num + 4, denom + 1)
+inic = (1,2,2) 
+prj (catalan, num, denom) = catalan
 \end{code}
 
 \subsection*{Problema 4}
 
 \begin{code}
-lrh [] = 0
-lrh heights = maximum . map calculaArea . geraListas $ heights
+lrh = hyloList c a . geraListas
 \end{code}
 
 \begin{code}
-geraListas :: [Int] -> [[Int]]
-geraListas heights = concatMap inits (tails heights)
+a [] = i1 ()
+a (x:xs) = i2 (calculaArea x, xs)
+\end{code}
+
+\begin{code}
+c (Left ()) = 0
+c (Right (xs, ys)) = max xs ys
 \end{code}
 
 \begin{code}
@@ -688,6 +765,47 @@ calculaArea :: [Int] -> Int
 calculaArea [] = 0
 calculaArea heights = minimum heights * length heights
 \end{code}
+
+\begin{code}
+geraListas :: [Int] -> [[Int]]
+geraListas heights = concatMap inits (tails heights)
+\end{code}
+
+Diagrama de geraListas:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Nat0|^*
+           \ar[r]^{|geraListas|}
+&
+    (|Nat0|^*)^*
+}
+\end{eqnarray*}
+
+Diagrama do hilomorfismo:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    (|Nat0|^*)^*
+           \ar[r]^-{|a|}
+           \ar[d]_-{|anaList a|}
+&
+    |1 + Nat0| + (|Nat0|^*)^*
+           \ar[d]^-{|id + id x a|}
+\\
+    |Nat0|^*
+           \ar[d]_-{|cataList c|}
+&
+    |1 + Nat0| + |Nat0|^*
+           \ar[d]^-{|id + id x c|}
+\\
+    |Nat0|
+&
+    |1 + Nat0| + |Nat0|
+           \ar[l]^-{|c|}
+}
+\end{eqnarray*}
+
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
