@@ -821,6 +821,7 @@ Votos desperdiçados:
 \>[5]{}\mathbf{where}\;\Varid{restantes}\mathrel{=}(\mathbin{/})\mathbin{\mathopen{\langle}\$\mathclose{\rangle}}\Varid{fromIntegral}\comp (\p1\comp \p2)\mathbin{<*>}\Varid{fromIntegral}\comp \succ \comp (\p2\comp \p2){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
 A função \textit{step} aplica basicamente a função \textit{update}, que vai atualizar o número de deputados de um partido. A função \textit{update} vai verificar se o partido é o partido com maior quociente e se for, incrementa o número de deputados desse partido. Esta função foi feita baseada no \textbf{McCarthy's Conditional}. A função \textit{step} vai ser utilizada para construir a \textit{history}.
 Para além disso, a variável \textit{maxParty} vai buscar o partido com maior quociente e a função \textit{quotient} vai calcular o quociente de um partido. A variável \textit{pred} vai verificar se o partido é o partido com maior quociente. 
 
@@ -850,7 +851,7 @@ Corpo do ciclo-\textbf{for}:
 \ColumnHook
 \end{hscode}\resethooks
 
-O \textbf{History} terá os seguintes passos: 
+O \textbf{History} terá os seguintes passos, no exemplo fornecido neste enunciado: 
 \begin{align*}
     i = 0 & \quad [(A,(12000,0)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
     i = 1 & \quad [(A,(12000,1)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
@@ -866,9 +867,13 @@ O \textbf{History} terá os seguintes passos:
 
 Genes de \ensuremath{\Varid{mergek}}:
 
+O anamorfismo g recebe uma lista de listas ordenadas e cria pares recursivamente. Por sua vez, o catamorfismo f aplica a função merge a pares de listas recursivamente. O resultado do hilomorfismo mergek será uma única lista ordenada.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{f}\mathbin{::}(\Conid{Ord}\;\Varid{a})\Rightarrow ()+([\mskip1.5mu \Varid{a}\mskip1.5mu],[\mskip1.5mu \Varid{a}\mskip1.5mu])\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\\
 \>[B]{}\Varid{f}\;(i_1\;())\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{f}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{merge}\;(\Varid{xs},\Varid{ys}){}\<[E]%
@@ -878,6 +883,8 @@ Genes de \ensuremath{\Varid{mergek}}:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{g}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to ()+([\mskip1.5mu \Varid{a}\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]){}\<[E]%
+\\
 \>[B]{}\Varid{g}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
 \\
 \>[B]{}\Varid{g}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\mathrel{=}i_2\;(\Varid{x},[\mskip1.5mu \mskip1.5mu]){}\<[E]%
@@ -886,8 +893,7 @@ Genes de \ensuremath{\Varid{mergek}}:
 \ColumnHook
 \end{hscode}\resethooks
 
-Diagrama:
-
+O seguinte diagrama representa o hilomorfismo mergek:
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     (\ensuremath{\N_0}^*)^*
@@ -911,6 +917,10 @@ Diagrama:
 \end{eqnarray*}
 
 \noindent Extensão de \ensuremath{\Varid{mSort}}:
+
+Foi criada uma função lsplitk'' que parte uma lista em k sublistas recursivamente. Se k receber o valor de 1, é dado um caso de paragem que coloca cada elemento da lista numa lista dentro da nova lista. Este caso foi implementado para não conduzir a um loop infinito.
+Esta nova função lsplitk'' permite criar um hilomorfismo mSortk que implementa mergek onde mSort implementaria merge.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -968,41 +978,51 @@ Diagrama:
 \ColumnHook
 \end{hscode}\resethooks
 
+O algoritmo mSort original divide a lista em dois recursivamente até que cada sublista contenha apenas um elemento. A implementação de mSortk, que recebe um inteiro k pelo utilizador, permite ajustar a divisão da lista, restringindo o número de chamadas recursivas ao necessário e resultando num desempenho mais eficiente.
+
 \subsection*{Problema 3}
-
-Sendo
-
+Sendo,
 \begin{math}
 	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
 \end{math}
 
-É imediato que $catalan(0) = 1$.
+é imediato que $catalan(0) = 1$.
 
-Já para $catalan(n+1)$ é necessário calcular $catalan(n+1) =$ $k$ $catalan(n)$ 
+Para \textit{cat} ser uma implementação mais eficiente de \textit{catalan}, derivada por recursividade mútua, não calculando factoriais nenhuns, é necessário encontrar um \textit{k} tal que, \[catalan(n+1) = k * catalan(n)\]
 
+Para tal fazemos os seguintes cálculos matemáticos:
 
 \begin{math}
-	x = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} =
+k = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} =
 \end{math}
 
 \begin{math}
-  = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} = \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
+= \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
 \end{math}
 
-Temos então
+Temos então \[catalan(n+1) = \frac{4n+2} {(n+2)} * catalan(n)\]
+
+Sendo $k(n) = \frac{4n+2} {(n+2)}$ podemos dividir \textit{k} em duas funções:
+$num = 4n +2$ e $denom = n+2$
+
+Onde,
+\begin{math}
+num(0) = 2
+\end{math}
 
 \begin{math}
-catalan(n+1) = \frac{4n+2} {(n+2)} catalan(n)
+num(n+1) = 4(n+1)+2 = 4n + 4 + 2 = 4 + 4n + 2 = num(n) + 4
 \end{math}
 
-Sendo $cataux(n) = \frac{4n+2} {(n+2)}$ podemos dividir cataux em duas funções:
+\begin{math}
+denom(0) = 2
+\end{math}
 
-$num = 4n +2$
-$denom = n+2$
+\begin{math}
+denom(n+1) = n + 1 + 2 = n + 2 + 1 = denom(n) + 1
+\end{math}
 
-Onde $num(0) = denom(0) = 2$, $num(n+1) = 4(n+1)+2 = 4n +4 +2 = 4 + 4n +2 = num(n) + 4$ e $denom(n+1) = n + 1 + 2 =n + 2 + 1 = denom(n) + 1$
-
-Com isto temos que:
+Assim, temos: 
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1031,14 +1051,14 @@ Com isto temos que:
 \ColumnHook
 \end{hscode}\resethooks
 
-Podemos então concluir que:
-
+Podemos concluir que:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{cat}\mathrel{=}\Varid{prj}\comp \for{\Varid{loop}}\ {\Varid{inic}}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
 onde:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1051,8 +1071,10 @@ onde:
 \ColumnHook
 \end{hscode}\resethooks
 
-\subsection*{Problema 4}
+\textit{catdef} é menos eficiente que \textit{cat} principalmente quando o n é elevado, como mencionado no enunciado, por requerir múltiplos cálculos de factoriais repetitivos. Já \textit{cat} vai atualizando os valores de \textit{catalan}, \textit{num}, e \textit{denom} a cada passo evitando cálculos repetitivos.
 
+\subsection*{Problema 4}
+De forma a solucionar o problema de forma simples, \textit{lrh} é definida por um hilomorfismo e pela função \textit{geraListas}:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1060,24 +1082,30 @@ onde:
 \ColumnHook
 \end{hscode}\resethooks
 
+A função \textit{geraListas} recebe a lista das alturas de cada barra do histograma e gera as várias sublistas que podem estar contidas em tal.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{geraListas}\mathbin{::}[\mskip1.5mu \Conid{Int}\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{geraListas}\;\Varid{heights}\mathrel{=}\Varid{concatMap}\;\Varid{inits}\;(\Varid{tails}\;\Varid{heights}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Após isso é então efetuado o hilomorfismo que recebe a lista de listas gerada por \textit{geraListas}.
+É pelo anamorfismo \textit{a} que é calculada a área para cada lista recursivamente com o auxilio da função \textit{calculaArea}.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{a}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]\to ()+(\Conid{Int},[\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]){}\<[E]%
+\\
 \>[B]{}\Varid{a}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
 \\
 \>[B]{}\Varid{a}\;(\Varid{x}\mathbin{:}\Varid{xs})\mathrel{=}i_2\;(\Varid{calculaArea}\;\Varid{x},\Varid{xs}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{c}\;(i_1\;())\mathrel{=}\mathrm{0}{}\<[E]%
-\\
-\>[B]{}\Varid{c}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{max}\;\Varid{xs}\;\Varid{ys}{}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
-
+\textit{calculaArea} calcula a área do retângulo inscrito na lista recebida.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1089,17 +1117,19 @@ onde:
 \ColumnHook
 \end{hscode}\resethooks
 
+É pelo catamorfismo \textit{c} que é calculada, recursivamente, a maior área entre as áreas de todos os retângulos que são possíveis inscrever no histograma.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{geraListas}\mathbin{::}[\mskip1.5mu \Conid{Int}\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{c}\mathbin{::}()+(\Conid{Int},\Conid{Int})\to \Conid{Int}{}\<[E]%
 \\
-\>[B]{}\Varid{geraListas}\;\Varid{heights}\mathrel{=}\Varid{concatMap}\;\Varid{inits}\;(\Varid{tails}\;\Varid{heights}){}\<[E]%
+\>[B]{}\Varid{c}\;(i_1\;())\mathrel{=}\mathrm{0}{}\<[E]%
+\\
+\>[B]{}\Varid{c}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{max}\;\Varid{xs}\;\Varid{ys}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
-Diagrama de geraListas:
-
+Os seguintes diagramas ilustram \textit{geraListas} e o hilomorfismo respetivamente:
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     \ensuremath{\N_0}^*
@@ -1109,8 +1139,6 @@ Diagrama de geraListas:
 }
 \end{eqnarray*}
 
-Diagrama do hilomorfismo:
-
 \begin{eqnarray*}
 \xymatrix@C=2cm{
     (\ensuremath{\N_0}^*)^*
@@ -1118,13 +1146,13 @@ Diagrama do hilomorfismo:
            \ar[d]_-{\ensuremath{\anaList{\Varid{a}}}}
 &
     \ensuremath{\mathrm{1}\mathbin{+}\N_0} + (\ensuremath{\N_0}^*)^*
-           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{a}}}
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}} \times \ensuremath{\Varid{a}}}
 \\
     \ensuremath{\N_0}^*
            \ar[d]_-{\ensuremath{\llparenthesis\, \Varid{c}\,\rrparenthesis}}
 &
     \ensuremath{\mathrm{1}\mathbin{+}\N_0} + \ensuremath{\N_0}^*
-           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{c}}}
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}} \times \ensuremath{\Varid{c}}}
 \\
     \ensuremath{\N_0}
 &
@@ -1132,7 +1160,6 @@ Diagrama do hilomorfismo:
            \ar[l]^-{\ensuremath{\Varid{c}}}
 }
 \end{eqnarray*}
-
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
@@ -1145,4 +1172,3 @@ Diagrama do hilomorfismo:
 
 %----------------- Fim do documento -------------------------------------------%
 \end{document}
-

@@ -602,6 +602,7 @@ waste = sum . map restantes . last
     where restantes = (/) <$> fromIntegral . (p1 . p2) <*> fromIntegral . succ . (p2 . p2)
 
 \end{code}
+
 A função \textit{step} aplica basicamente a função \textit{update}, que vai atualizar o número de deputados de um partido. A função \textit{update} vai verificar se o partido é o partido com maior quociente e se for, incrementa o número de deputados desse partido. Esta função foi feita baseada no \textbf{McCarthy's Conditional}. A função \textit{step} vai ser utilizada para construir a \textit{history}.
 Para além disso, a variável \textit{maxParty} vai buscar o partido com maior quociente e a função \textit{quotient} vai calcular o quociente de um partido. A variável \textit{pred} vai verificar se o partido é o partido com maior quociente. 
 
@@ -618,7 +619,7 @@ step l = map update l
 
 \end{code}
 
-O \textbf{History} terá os seguintes passos: 
+O \textbf{History} terá os seguintes passos, no exemplo fornecido neste enunciado: 
 \begin{align*}
     i = 0 & \quad [(A,(12000,0)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
     i = 1 & \quad [(A,(12000,1)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
@@ -634,8 +635,11 @@ O \textbf{History} terá os seguintes passos:
 
 Genes de |mergek|:
 
+O anamorfismo g recebe uma lista de listas ordenadas e cria pares recursivamente. Por sua vez, o catamorfismo f aplica a função merge a pares de listas recursivamente. O resultado do hilomorfismo mergek será uma única lista ordenada.
+
 \begin{code}
 
+f :: (Ord a) => Either () ([a], [a]) -> [a]
 f (Left ()) = []                          
 f (Right (xs, ys)) = merge (xs, ys)
 
@@ -643,14 +647,14 @@ f (Right (xs, ys)) = merge (xs, ys)
 
 \begin{code}
 
+g :: [[a]] -> Either () ([a], [[a]])
 g [] = i1 ()
 g [x] = i2 (x, [])
 g (x:xs) = i2 (x, xs)
 
 \end{code}
 
-Diagrama:
-
+O seguinte diagrama representa o hilomorfismo mergek:
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     (|Nat0|^*)^*
@@ -674,14 +678,15 @@ Diagrama:
 \end{eqnarray*}
 
 \noindent Extensão de |mSort|:
+
+Foi criada uma função lsplitk'' que parte uma lista em k sublistas recursivamente. Se k receber o valor de 1, é dado um caso de paragem que coloca cada elemento da lista numa lista dentro da nova lista. Este caso foi implementado para não conduzir a um loop infinito.
+Esta nova função lsplitk'' permite criar um hilomorfismo mSortk que implementa mergek onde mSort implementaria merge.
+
 \begin{code}
-
 mSortk k = (either singl mergek) . (id -|- map (mSortk k)) . (lsplitk'' k)
-
 \end{code}
 
 \begin{code}
-
 lsplitk :: Int -> [a] -> [[a]]
 lsplitk k l = lsplitk' k (length l) l
   where
@@ -693,49 +698,57 @@ lsplitk k l = lsplitk' k (length l) l
 \end{code}
 
 \begin{code}
-
 lsplitk'' :: Int -> [a] -> Either a [[a]]
 lsplitk'' _ [x] = i1 x
 lsplitk'' 1 xs  = i2 $ map (\x -> [x]) xs
 lsplitk'' k xs  = i2 (lsplitk k xs)
-
 \end{code}
 
+O algoritmo mSort original divide a lista em dois recursivamente até que cada sublista contenha apenas um elemento. A implementação de mSortk, que recebe um inteiro k pelo utilizador, permite ajustar a divisão da lista, restringindo o número de chamadas recursivas ao necessário e resultando num desempenho mais eficiente.
+
 \subsection*{Problema 3}
-
-Sendo
-
+Sendo,
 \begin{math}
 	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
 \end{math}
 
-É imediato que $catalan(0) = 1$.
+é imediato que $catalan(0) = 1$.
 
-Já para $catalan(n+1)$ é necessário calcular $catalan(n+1) =$ $k$ $catalan(n)$ 
+Para \textit{cat} ser uma implementação mais eficiente de \textit{catalan}, derivada por recursividade mútua, não calculando factoriais nenhuns, é necessário encontrar um \textit{k} tal que, \[catalan(n+1) = k * catalan(n)\]
 
+Para tal fazemos os seguintes cálculos matemáticos:
 
 \begin{math}
-	x = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} =
+k = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} =
 \end{math}
 
 \begin{math}
-  = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} = \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
+= \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
 \end{math}
 
-Temos então
+Temos então \[catalan(n+1) = \frac{4n+2} {(n+2)} * catalan(n)\]
+
+Sendo $k(n) = \frac{4n+2} {(n+2)}$ podemos dividir \textit{k} em duas funções:
+$num = 4n +2$ e $denom = n+2$
+
+Onde,
+\begin{math}
+num(0) = 2
+\end{math}
 
 \begin{math}
-catalan(n+1) = \frac{4n+2} {(n+2)} catalan(n)
+num(n+1) = 4(n+1)+2 = 4n + 4 + 2 = 4 + 4n + 2 = num(n) + 4
 \end{math}
 
-Sendo $cataux(n) = \frac{4n+2} {(n+2)}$ podemos dividir cataux em duas funções:
+\begin{math}
+denom(0) = 2
+\end{math}
 
-$num = 4n +2$
-$denom = n+2$
+\begin{math}
+denom(n+1) = n + 1 + 2 = n + 2 + 1 = denom(n) + 1
+\end{math}
 
-Onde $num(0) = denom(0) = 2$, $num(n+1) = 4(n+1)+2 = 4n +4 +2 = 4 + 4n +2 = num(n) + 4$ e $denom(n+1) = n + 1 + 2 =n + 2 + 1 = denom(n) + 1$
-
-Com isto temos que:
+Assim, temos: 
 
 \begin{code}
 catalan 0 = 1
@@ -752,47 +765,56 @@ denom 0 = 2
 denom(n+1) = denom(n) + 1
 \end{code}
 
-Podemos então concluir que:
-
+Podemos concluir que:
 \begin{code}
 cat = prj . (for loop inic)
 \end{code}
+
 onde:
 \begin{code}
 loop (catalan, num, denom) = ((num * catalan) `div` denom, num + 4, denom + 1)
 inic = (1,2,2) 
 prj (catalan, num, denom) = catalan
+
 \end{code}
 
-\subsection*{Problema 4}
+\textit{catdef} é menos eficiente que \textit{cat} principalmente quando o n é elevado, como mencionado no enunciado, por requerir múltiplos cálculos de factoriais repetitivos. Já \textit{cat} vai atualizando os valores de \textit{catalan}, \textit{num}, e \textit{denom} a cada passo evitando cálculos repetitivos.
 
+\subsection*{Problema 4}
+De forma a solucionar o problema de forma simples, \textit{lrh} é definida por um hilomorfismo e pela função \textit{geraListas}:
 \begin{code}
 lrh = hyloList c a . geraListas
 \end{code}
 
+A função \textit{geraListas} recebe a lista das alturas de cada barra do histograma e gera as várias sublistas que podem estar contidas em tal.
 \begin{code}
+geraListas :: [Int] -> [[Int]]
+geraListas heights = concatMap inits (tails heights)
+\end{code}
+
+Após isso é então efetuado o hilomorfismo que recebe a lista de listas gerada por \textit{geraListas}.
+É pelo anamorfismo \textit{a} que é calculada a área para cada lista recursivamente com o auxilio da função \textit{calculaArea}.
+\begin{code}
+a :: [[Int]] -> Either () (Int, [[Int]])
 a [] = i1 ()
 a (x:xs) = i2 (calculaArea x, xs)
 \end{code}
 
-\begin{code}
-c (Left ()) = 0
-c (Right (xs, ys)) = max xs ys
-\end{code}
-
+\textit{calculaArea} calcula a área do retângulo inscrito na lista recebida.
 \begin{code}
 calculaArea :: [Int] -> Int
 calculaArea [] = 0
 calculaArea heights = minimum heights * length heights
 \end{code}
 
+É pelo catamorfismo \textit{c} que é calculada, recursivamente, a maior área entre as áreas de todos os retângulos que são possíveis inscrever no histograma.
 \begin{code}
-geraListas :: [Int] -> [[Int]]
-geraListas heights = concatMap inits (tails heights)
+c :: Either () (Int, Int) -> Int
+c (Left ()) = 0
+c (Right (xs, ys)) = max xs ys
 \end{code}
 
-Diagrama de geraListas:
-
+Os seguintes diagramas ilustram \textit{geraListas} e o hilomorfismo respetivamente:
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |Nat0|^*
@@ -802,8 +824,6 @@ Diagrama de geraListas:
 }
 \end{eqnarray*}
 
-Diagrama do hilomorfismo:
-
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     (|Nat0|^*)^*
@@ -811,13 +831,13 @@ Diagrama do hilomorfismo:
            \ar[d]_-{|anaList a|}
 &
     |1 + Nat0| + (|Nat0|^*)^*
-           \ar[d]^-{|id + id x a|}
+           \ar[d]^-{|id + id| \times |a|}
 \\
     |Nat0|^*
            \ar[d]_-{|cataList c|}
 &
     |1 + Nat0| + |Nat0|^*
-           \ar[d]^-{|id + id x c|}
+           \ar[d]^-{|id + id| \times |c|}
 \\
     |Nat0|
 &
@@ -825,7 +845,6 @@ Diagrama do hilomorfismo:
            \ar[l]^-{|c|}
 }
 \end{eqnarray*}
-
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
@@ -838,4 +857,3 @@ Diagrama do hilomorfismo:
 
 %----------------- Fim do documento -------------------------------------------%
 \end{document}
-
