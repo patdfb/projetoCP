@@ -707,7 +707,6 @@ lsplitk'' k xs  = i2 (lsplitk k xs)
 O algoritmo mSort original divide a lista em dois recursivamente até que cada sublista contenha apenas um elemento. A implementação de mSortk, que recebe um inteiro k pelo utilizador, permite ajustar a divisão da lista, restringindo o número de chamadas recursivas ao necessário e resultando num desempenho mais eficiente.
 
 \subsection*{Problema 3}
-Neste problema, é nos pedida uma implementação mais eficiente do cálculo do número de Catalan, derivada por recursividade mútua, sem cálculos de factoriais. 
 Sendo
 \begin{math}
 	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
@@ -775,11 +774,11 @@ prj (catalan, num, denom) = catalan
 
 \end{code}
 
+\textit{catdef} é menos eficiente que \textit{cat} principalmente quando o n é elevado, como mencionado no enunciado, por requerir múltiplos cálculos de factoriais repetitivos. Já \textit{cat} vai atualizando os valores de \textit{catalan}, \textit{num}, e \textit{denom} a cada passo evitando cálculos repetitivos.
+
 \textbf{Nota:}
 
 Em inic, 1 é o valor de catalan(0), 2 é o valor de num(0) e 2 é o valor de denom(0), sendo estes os valores iniciais.
-
-\textit{catdef} é menos eficiente que \textit{cat} principalmente quando o n é elevado, como mencionado no enunciado, por requerir múltiplos cálculos de factoriais repetitivos. Já \textit{cat} vai atualizando os valores de \textit{catalan}, \textit{num}, e \textit{denom} a cada passo evitando cálculos repetitivos.
 
 \subsection*{Problema 4}
 De forma a solucionar o problema de forma simples, \textit{lrh} é definida por um hilomorfismo e pela função \textit{geraListas}:
