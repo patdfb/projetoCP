@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.6.3)  10 JUN 2024 13:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2024.6.3)  10 JUN 2024 22:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1508,6 +1508,12 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 \openout7 = `cp2324t.ptb'.
 
 
+<xymatrix 2x3
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 88
+9.
+ (/usr/share/texmf/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) 290>
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
@@ -1521,20 +1527,37 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 
 \openout7 = `cp2324t.ptb'.
 
-\openout7 = `cp2324t.ptb'.
 
-\openout7 = `cp2324t.ptb'.
-
-\openout7 = `cp2324t.ptb'.
-
-\openout7 = `cp2324t.ptb'.
-
- (./cp2324t.ind
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[9] [10
+[9{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}]
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+\openout7 = `cp2324t.ptb'.
+
+ <xymatrix 2x1 51> <xymatrix
+2x3 290> (./cp2324t.ind
+Overfull \hbox (128.0374pt too wide) has occurred while \output is active
+ [][]| 
+ []
+
+[10] [11
 
 
 ]) (./cp2324t.bbl
@@ -1547,7 +1570,7 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[11
+[12
 
 ] (./cp2324t.aux)
  ***********
@@ -1558,11 +1581,11 @@ Package rerunfilecheck Info: File `cp2324t.out' has not changed.
 (rerunfilecheck)             Checksum: 1E8BAAA1D735F02DA9661147C6E991D3;1503.
  ) 
 Here is how much of TeX's memory you used:
- 52038 strings out of 476106
- 1166706 string characters out of 5793934
- 1942975 words of memory out of 5000000
- 73295 multiletter control sequences out of 15000+600000
- 820175 words of font info for 158 fonts, out of 8000000 for 9000
+ 52087 strings out of 476106
+ 1167720 string characters out of 5793934
+ 1944975 words of memory out of 5000000
+ 73333 multiletter control sequences out of 15000+600000
+ 830018 words of font info for 163 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  99i,19n,101p,3281b,910s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
@@ -1578,19 +1601,20 @@ nts/type1/paratype/ptsans/PTS55F.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /ptsans/PTS75F.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
 10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/stmaryrd/stmary9.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/xypic/xyatip10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/xypic/xybtip10.pfb>
-Output written on cp2324t.pdf (12 pages, 476123 bytes).
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texmf/fonts/type1
+/public/lm/lmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/s
+ymbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stmaryrd/st
+mary10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/stmaryrd/stmary9.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/xyatip10.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/public/xypic/xybtip10.pfb>
+Output written on cp2324t.pdf (13 pages, 510790 bytes).
 PDF statistics:
- 332 PDF objects out of 1000 (max. 8388607)
- 270 compressed objects within 3 object streams
- 33 named destinations out of 1000 (max. 500000)
+ 348 PDF objects out of 1000 (max. 8388607)
+ 281 compressed objects within 3 object streams
+ 34 named destinations out of 1000 (max. 500000)
  102 words of extra memory for PDF output out of 10000 (max. 10000000)
 

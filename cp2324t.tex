@@ -844,11 +844,19 @@ Corpo do ciclo-\textbf{for}:
 \subsection*{Problema 2}
 
 Genes de \ensuremath{\Varid{mergek}}:
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{g}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to ()+([\mskip1.5mu \Varid{a}\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu])\mbox{\onelinecomment  coloca em pares (para poder usar merge)}{}\<[E]%
+\>[B]{}\Varid{f}\;(i_1\;())\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
 \\
+\>[B]{}\Varid{f}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{merge}\;(\Varid{xs},\Varid{ys}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{g}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
 \\
 \>[B]{}\Varid{g}\;[\mskip1.5mu \Varid{x}\mskip1.5mu]\mathrel{=}i_2\;(\Varid{x},[\mskip1.5mu \mskip1.5mu]){}\<[E]%
@@ -857,17 +865,29 @@ Genes de \ensuremath{\Varid{mergek}}:
 \ColumnHook
 \end{hscode}\resethooks
 
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{f}\mathbin{::}(\Conid{Ord}\;\Varid{a})\Rightarrow ()+([\mskip1.5mu \Varid{a}\mskip1.5mu],[\mskip1.5mu \Varid{a}\mskip1.5mu])\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{f}\;(i_1\;())\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{f}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{merge}\;(\Varid{xs},\Varid{ys}){}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
+Diagrama:
 
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    (\ensuremath{\N_0}^*)^*
+           \ar[r]^-{\ensuremath{\Varid{g}}}
+           \ar[d]_-{\ensuremath{\anaList{\Varid{g}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0}^* + (\ensuremath{\N_0}^*)^*
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{g}}}
+\\
+    (\ensuremath{\N_0}^*)^*
+           \ar[d]_-{\ensuremath{\llparenthesis\, \Varid{f}\,\rrparenthesis}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0}^* + (\ensuremath{\N_0}^*)^*
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{f}}}
+\\
+    \ensuremath{\N_0}^*
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0}^* + \ensuremath{\N_0}^*
+           \ar[l]^-{\ensuremath{\Varid{f}}}
+}
+\end{eqnarray*}
 
 \noindent Extensão de \ensuremath{\Varid{mSort}}:
 \begin{hscode}\SaveRestoreHook
@@ -924,6 +944,69 @@ Genes de \ensuremath{\Varid{mergek}}:
 
 \subsection*{Problema 3}
 
+Sendo
+
+\begin{math}
+	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
+\end{math}
+
+É imediato que $catalan(0) = 1$.
+
+Já para $catalan(n+1)$ é necessário calcular $catalan(n+1) =$ $k$ $catalan(n)$ 
+
+
+\begin{math}
+	x = \frac{catalan(n+1)} {catalan(n)} = \frac{\frac{(2(n+1))!}{(n+1+1)! (n+1!)}} {\frac{(2n)!}{(n+1)! (n!)}} = \frac{(2n+2)! (n+1)! (n!)} {(n+2)! (n+1)! (2n)!} = \frac{(2n+2) (2n+1) (2n)! (n!)} {(n+2) (n+1) (n)! (2n)!} =
+\end{math}
+
+\begin{math}
+  = \frac{(2n+2) (2n+1)} {(n+2) (n+1)} = \frac{2(n+1) (2n+1)} {(n+2) (n+1)} = \frac{2(2n+1)} {(n+2)}  = \frac{4n+2} {(n+2)} 
+\end{math}
+
+Temos então
+
+\begin{math}
+catalan(n+1) = \frac{4n+2} {(n+2)} catalan(n)
+\end{math}
+
+Sendo $cataux(n) = \frac{4n+2} {(n+2)}$ podemos dividir cataux em duas funções:
+
+$num = 4n +2$
+$denom = n+2$
+
+Onde $num(0) = denom(0) = 2$, $num(n+1) = 4(n+1)+2 = 4n +4 +2 = 4 + 4n +2 = num(n) + 4$ e $denom(n+1) = n + 1 + 2 =n + 2 + 1 = denom(n) + 1$
+
+Com isto temos que:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{catalan}\;\mathrm{0}\mathrel{=}\mathrm{1}{}\<[E]%
+\\
+\>[B]{}\Varid{catalan}\;(\Varid{n}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{num}\;(\Varid{n})\mathbin{*}\Varid{catalan}\;(\Varid{n})\mathbin{\Varid{`div`}}\Varid{denom}\;(\Varid{n}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{num}\;\mathrm{0}\mathrel{=}\mathrm{2}{}\<[E]%
+\\
+\>[B]{}\Varid{num}\;(\Varid{n}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{num}\;(\Varid{n})\mathbin{+}\mathrm{4}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{denom}\;\mathrm{0}\mathrel{=}\mathrm{2}{}\<[E]%
+\\
+\>[B]{}\Varid{denom}\;(\Varid{n}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{denom}\;(\Varid{n})\mathbin{+}\mathrm{1}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Podemos então concluir que:
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -934,11 +1017,11 @@ onde:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{loop}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{loop}\;(\Varid{catalan},\Varid{num},\Varid{denom})\mathrel{=}((\Varid{num}\mathbin{*}\Varid{catalan})\mathbin{\Varid{`div`}}\Varid{denom},\Varid{num}\mathbin{+}\mathrm{4},\Varid{denom}\mathbin{+}\mathrm{1}){}\<[E]%
 \\
-\>[B]{}\Varid{inic}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{inic}\mathrel{=}(\mathrm{1},\mathrm{2},\mathrm{2}){}\<[E]%
 \\
-\>[B]{}\Varid{prj}\mathrel{=}\p1{}\<[E]%
+\>[B]{}\Varid{prj}\;(\Varid{catalan},\Varid{num},\Varid{denom})\mathrel{=}\Varid{catalan}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -947,18 +1030,25 @@ onde:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{lrh}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}\mathrm{0}{}\<[E]%
-\\
-\>[B]{}\Varid{lrh}\;\Varid{heights}\mathrel{=}\Varid{maximum}\comp \map \;\Varid{calculaArea}\comp \Varid{geraListas}\mathbin{\$}\Varid{heights}{}\<[E]%
+\>[B]{}\Varid{lrh}\mathrel{=}\hyloList{\Varid{c}}{\Varid{a}}\comp \Varid{geraListas}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{geraListas}\mathbin{::}[\mskip1.5mu \Conid{Int}\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{a}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
 \\
-\>[B]{}\Varid{geraListas}\;\Varid{heights}\mathrel{=}\Varid{concatMap}\;\Varid{inits}\;(\Varid{tails}\;\Varid{heights}){}\<[E]%
+\>[B]{}\Varid{a}\;(\Varid{x}\mathbin{:}\Varid{xs})\mathrel{=}i_2\;(\Varid{calculaArea}\;\Varid{x},\Varid{xs}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{c}\;(i_1\;())\mathrel{=}\mathrm{0}{}\<[E]%
+\\
+\>[B]{}\Varid{c}\;(i_2\;(\Varid{xs},\Varid{ys}))\mathrel{=}\Varid{max}\;\Varid{xs}\;\Varid{ys}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -972,6 +1062,51 @@ onde:
 \>[B]{}\Varid{calculaArea}\;\Varid{heights}\mathrel{=}\Varid{minimum}\;\Varid{heights}\mathbin{*}\length \;\Varid{heights}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{geraListas}\mathbin{::}[\mskip1.5mu \Conid{Int}\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Conid{Int}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{geraListas}\;\Varid{heights}\mathrel{=}\Varid{concatMap}\;\Varid{inits}\;(\Varid{tails}\;\Varid{heights}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Diagrama de geraListas:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\N_0}^*
+           \ar[r]^{\ensuremath{\Varid{geraListas}}}
+&
+    (\ensuremath{\N_0}^*)^*
+}
+\end{eqnarray*}
+
+Diagrama do hilomorfismo:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    (\ensuremath{\N_0}^*)^*
+           \ar[r]^-{\ensuremath{\Varid{a}}}
+           \ar[d]_-{\ensuremath{\anaList{\Varid{a}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0} + (\ensuremath{\N_0}^*)^*
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{a}}}
+\\
+    \ensuremath{\N_0}^*
+           \ar[d]_-{\ensuremath{\llparenthesis\, \Varid{c}\,\rrparenthesis}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0} + \ensuremath{\N_0}^*
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\;\Varid{x}\;\Varid{c}}}
+\\
+    \ensuremath{\N_0}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0} + \ensuremath{\N_0}
+           \ar[l]^-{\ensuremath{\Varid{c}}}
+}
+\end{eqnarray*}
+
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
