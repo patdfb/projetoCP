@@ -711,7 +711,6 @@ Sendo,
 \begin{math}
 	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
 \end{math}
-
 é imediato que $catalan(0) = 1$.
 
 Para \textit{cat} ser uma implementação mais eficiente de \textit{catalan}, derivada por recursividade mútua, não calculando factoriais nenhuns, é necessário encontrar um \textit{k} tal que, \[catalan(n+1) = k * catalan(n)\]
@@ -732,16 +731,13 @@ Sendo $k(n) = \frac{4n+2} {(n+2)}$ podemos dividir \textit{k} em duas funções:
 $num = 4n +2$ e $denom = n+2$
 
 Onde,
+
 \begin{math}
-num(0) = 2
+num(0) = denom(0) = 2
 \end{math}
 
 \begin{math}
 num(n+1) = 4(n+1)+2 = 4n + 4 + 2 = 4 + 4n + 2 = num(n) + 4
-\end{math}
-
-\begin{math}
-denom(0) = 2
 \end{math}
 
 \begin{math}
