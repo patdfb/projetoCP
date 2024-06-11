@@ -603,7 +603,7 @@ waste = sum . map restantes . last
 
 \end{code}
 
-A função \textit{step} aplica basicamente a função \textit{update}, que vai atualizar o número de deputados de um partido. A função \textit{update} vai verificar se o partido é o partido com maior quociente e se for, incrementa o número de deputados desse partido. Esta função foi feita baseada no \textbf{McCarthy's Conditional}. A função \textit{step} vai ser utilizada para construir a \textit{history}.
+A função \textit{step} aplica basicamente a função \textit{update}, que vai atualizar o número de deputados de um partido. A função \textit{update} vai verificar se o partido é o partido com maior quociente e se for incrementa o número de deputados desse partido. Esta função foi feita baseada no \textbf{McCarthy's Conditional}. A função \textit{step} vai ser utilizada para construir a \textit{history}.
 Para além disso, a variável \textit{maxParty} vai buscar o partido com maior quociente e a função \textit{quotient} vai calcular o quociente de um partido. A variável \textit{pred} vai verificar se o partido é o partido com maior quociente. 
 
 Corpo do ciclo-\textbf{for}:
@@ -707,7 +707,8 @@ lsplitk'' k xs  = i2 (lsplitk k xs)
 O algoritmo mSort original divide a lista em dois recursivamente até que cada sublista contenha apenas um elemento. A implementação de mSortk, que recebe um inteiro k pelo utilizador, permite ajustar a divisão da lista, restringindo o número de chamadas recursivas ao necessário e resultando num desempenho mais eficiente.
 
 \subsection*{Problema 3}
-Sendo,
+Neste problema, é nos pedida uma implementação mais eficiente do cálculo do número de Catalan, derivada por recursividade mútua, sem cálculos de factoriais. 
+Sendo
 \begin{math}
 	catalan(n) = \frac{(2n)!}{(n+1)! (n!) }
 \end{math}
@@ -730,7 +731,7 @@ Temos então \[catalan(n+1) = \frac{4n+2} {(n+2)} * catalan(n)\]
 Sendo $k(n) = \frac{4n+2} {(n+2)}$ podemos dividir \textit{k} em duas funções:
 $num = 4n +2$ e $denom = n+2$
 
-Onde,
+Logo, 
 
 \begin{math}
 num(0) = denom(0) = 2
@@ -769,10 +770,14 @@ cat = prj . (for loop inic)
 onde:
 \begin{code}
 loop (catalan, num, denom) = ((num * catalan) `div` denom, num + 4, denom + 1)
-inic = (1,2,2) 
+inic = (1,2,2)
 prj (catalan, num, denom) = catalan
 
 \end{code}
+
+\textbf{Nota:}
+
+Em inic, 1 é o valor de catalan(0), 2 é o valor de num(0) e 2 é o valor de denom(0), sendo estes os valores iniciais.
 
 \textit{catdef} é menos eficiente que \textit{cat} principalmente quando o n é elevado, como mencionado no enunciado, por requerir múltiplos cálculos de factoriais repetitivos. Já \textit{cat} vai atualizando os valores de \textit{catalan}, \textit{num}, e \textit{denom} a cada passo evitando cálculos repetitivos.
 
@@ -788,8 +793,8 @@ geraListas :: [Int] -> [[Int]]
 geraListas heights = concatMap inits (tails heights)
 \end{code}
 
-Após isso é então efetuado o hilomorfismo que recebe a lista de listas gerada por \textit{geraListas}.
-É pelo anamorfismo \textit{a} que é calculada a área para cada lista recursivamente com o auxilio da função \textit{calculaArea}.
+Após isso, é então efetuado o hilomorfismo que recebe a lista de listas gerada por \textit{geraListas}.
+É pelo anamorfismo \textit{a} que é calculada a área para cada lista recursivamente com o auxílio da função \textit{calculaArea}.
 \begin{code}
 a :: [[Int]] -> Either () (Int, [[Int]])
 a [] = i1 ()
@@ -810,7 +815,7 @@ c (Left ()) = 0
 c (Right (xs, ys)) = max xs ys
 \end{code}
 
-Os seguintes diagramas ilustram \textit{geraListas} e o hilomorfismo respetivamente:
+Os seguintes diagramas ilustram, respetivamente, \textit{geraListas} e o hilomorfismo:
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |Nat0|^*
@@ -841,6 +846,8 @@ Os seguintes diagramas ilustram \textit{geraListas} e o hilomorfismo respetivame
            \ar[l]^-{|c|}
 }
 \end{eqnarray*}
+
+Assim, através dos passos descritos atrás, chegamos à solução do problema; a função \textit{lrh} já definida no início.
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
