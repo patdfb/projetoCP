@@ -592,14 +592,21 @@ texto, diagramas e/ou outras funções auxiliares que sejam necessárias.
 \end{alert}
 
 \subsection*{Problema 1}
+Neste problema, cujo objetivo final era implementar o método de Hondt, primeiramente desenvolvemos as funções \textit{waste}, para resolver a wasted, e a função \textit{step} para descobrir a função history.
+A função \textit{waste} vai buscar o último elemento da history e a cada elemento da lista aplica a função \textit{restantes}, que calcula o número de votos desperdiçados de um partido. Depois a função soma todos os votos desperdiçados de todos os partidos. Isso vai originar a função \textit{wasted}.
+
 Votos desperdiçados:
 \begin{code}
 
 waste = sum . map restantes . last
-restantes = (/) <$> fromIntegral . (p1 . p2) <*> fromIntegral . succ . (p2 . p2)
+    where restantes = (/) <$> fromIntegral . (p1 . p2) <*> fromIntegral . succ . (p2 . p2)
 
 \end{code}
+A função \textit{step} aplica basicamente a função \textit{update}, que vai atualizar o número de deputados de um partido. A função \textit{update} vai verificar se o partido é o partido com maior quociente e se for, incrementa o número de deputados desse partido. Esta função foi feita baseada no \textbf{McCarthy's Conditional}. A função \textit{step} vai ser utilizada para construir a \textit{history}.
+Para além disso, a variável \textit{maxParty} vai buscar o partido com maior quociente e a função \textit{quotient} vai calcular o quociente de um partido. A variável \textit{pred} vai verificar se o partido é o partido com maior quociente. 
+
 Corpo do ciclo-\textbf{for}:
+
 \begin{code}
 
 step l = map update l
@@ -610,6 +617,18 @@ step l = map update l
     update = (\x -> if pred x then (\(p, (v, d)) -> (p, (v, succ d))) x else id x)
 
 \end{code}
+
+O \textbf{History} terá os seguintes passos: 
+\begin{align*}
+    i = 0 & \quad [(A,(12000,0)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
+    i = 1 & \quad [(A,(12000,1)),(B,(7500,0)),(C,(4500,0)),(D,(3000,0))] \\
+    i = 2 & \quad [(A,(12000,1)),(B,(7500,1)),(C,(4500,0)),(D,(3000,0))] \\
+    i = 3 & \quad [(A,(12000,2)),(B,(7500,1)),(C,(4500,0)),(D,(3000,0))] \\
+    i = 4 & \quad [(A,(12000,2)),(B,(7500,1)),(C,(4500,1)),(D,(3000,0))] \\
+    i = 5 & \quad [(A,(12000,3)),(B,(7500,1)),(C,(4500,1)),(D,(3000,0))] \\
+    i = 6 & \quad [(A,(12000,3)),(B,(7500,2)),(C,(4500,1)),(D,(3000,0))] \\
+    i = 7 & \quad [(A,(12000,3)),(B,(7500,2)),(C,(4500,1)),(D,(3000,1))]
+\end{align*}
 
 \subsection*{Problema 2}
 
@@ -677,7 +696,8 @@ lsplitk k l = lsplitk' k (length l) l
 
 lsplitk'' :: Int -> [a] -> Either a [[a]]
 lsplitk'' _ [x] = i1 x
-lsplitk'' k xs = i2 (lsplitk k xs)
+lsplitk'' 1 xs  = i2 $ map (\x -> [x]) xs
+lsplitk'' k xs  = i2 (lsplitk k xs)
 
 \end{code}
 
